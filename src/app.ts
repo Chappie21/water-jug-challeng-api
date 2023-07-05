@@ -3,6 +3,9 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 
+// routes
+import { solvedRouter } from './routers';
+
 // create a express aplication insatnce
 const app = express();
 
@@ -16,5 +19,8 @@ app.use(cors({ origin: true, credentials: true }));
 
 // use morgan for monitoring requests
 app.use(morgan('dev'));
+
+// use routes
+app.use('/api', solvedRouter);
 
 export default app;
