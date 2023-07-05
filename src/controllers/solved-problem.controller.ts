@@ -1,8 +1,14 @@
 import { Request, Response } from "express"
 import { errors } from "../helpers";
+import { problemHasSolution } from "../helpers";
 
 export const solvedProblemController = async (req:Request, res:Response) => {
     try {
+
+        // verify problem have solution
+        if (!problemHasSolution(req.body)) {
+            return res.status(400).json(errors.problemSolver.P0004);
+        }
 
         // resolve problem!!!
         return res.status(200).json({

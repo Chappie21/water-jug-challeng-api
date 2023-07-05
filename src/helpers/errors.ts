@@ -12,6 +12,10 @@ export const errors = {
             errorCode: 'P0003',
             message: 'The provided quantities must be positive.'
         },
+        P0004: {
+            errorCode: 'P0004',
+            message: 'The problem has no solution.'
+        }
     },
     serverError : {
         SE0001: {
