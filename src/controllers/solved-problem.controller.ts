@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { errors } from "../helpers";
 
 export const solvedProblemController = async (req:Request, res:Response) => {
     try {
@@ -11,9 +12,6 @@ export const solvedProblemController = async (req:Request, res:Response) => {
         console.log(error);
 
         // return error
-        return res.status(500).json({
-            message: 'server error... :(',
-            error: error
-        })
+        return res.status(500).json({...errors.serverError.SE0001, error});
     }
 }
