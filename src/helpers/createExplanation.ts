@@ -54,6 +54,9 @@ const createExplanation = (capacityX:number, capacityY:number, goalZ:number, isI
         listExplanations.push(createExplanationMessage(bucketX.currentQuantity, bucketY.currentQuantity, actions.transfer, isInvert))
     }
 
+    // mark last explanation as solved
+    listExplanations[listExplanations.length - 1].explanation += ' solved';
+
     return listExplanations;
 }
 
