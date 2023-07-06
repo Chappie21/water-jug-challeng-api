@@ -42,7 +42,7 @@ export class Bucket {
     }
 
     // set new Quantity
-    public addQuantity (newQuantity:number):void {
+    protected addQuantity (newQuantity:number):void {
         // verify quantity to add no exceeds the bucket's capacity
         if (this.quantity + newQuantity > this.capacity) {
             throw new Error("The quantity you are trying to add exceeds the bucket's capacity.");
@@ -70,10 +70,12 @@ export class Bucket {
             throw new Error('The bucket to which you want to transfer this amount is already full.');
         }
         
+        const totalToTransfer:number = this.quantity >= bucketToTransfer.availableSpace ? bucketToTransfer.availableSpace : quantityToTransfer;
+
         // transfer quantity to bucket to transfer
-        bucketToTransfer.addQuantity(quantityToTransfer);
+        bucketToTransfer.addQuantity(totalToTransfer);
 
         // subtract the amount transferred
-        this.quantity = this.quantity - quantityToTransfer;
+        this.quantity = this.quantity - totalToTransfer;
     }
 }

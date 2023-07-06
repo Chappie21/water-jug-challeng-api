@@ -2,20 +2,25 @@ import { Request, Response } from "express"
 import { errors } from "../helpers";
 import { problemHasSolution } from "../helpers";
 import { IProblemBody } from "interfaces";
+import { createExplanationPivotX, createExplanationPivotY } from "../helpers";
 
 export const solvedProblemController = async (req:Request, res:Response) => {
     try {
 
-        const bodyData:IProblemBody = req.body;
+        const { bucketX, bucketY, goalZ }:IProblemBody = req.body;
 
         // verify problem have solution
-        if (!problemHasSolution(bodyData)) {
+        if (!problemHasSolution(req.body)) {
             return res.status(400).json(errors.problemSolver.P0004);
         }
 
+        const solvedPivotX = createExplanationPivotX(bucketX, bucketY, goalZ);
+        const solvedPivotY = createExplanationPivotY(bucketX, bucketY, goalZ);
+
         // resolve problem!!!
         return res.status(200).json({
-            message: 'resolved!!!'
+            message: 'resolved!!!',
+            solution:  solvedPivotX.length <= solvedPivotY.length ? solvedPivotX : solvedPivotY
         })
     } catch (error:Error | any) {
         console.log(error);
