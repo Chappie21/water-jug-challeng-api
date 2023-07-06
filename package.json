@@ -25,6 +25,7 @@
     "@types/morgan": "^1.9.4",
     "concurrently": "^8.2.0",
     "nodemon": "^2.0.22",
+    "tsc": "^2.0.4",
     "typescript": "^5.1.6"
   }
 }
