@@ -56,10 +56,18 @@ As this is a TypeScript API, the code must be transpiled to JavaScript before be
 1. Start without hot reload (for deployment):
 
     ```
+    npm run build
+    ```
+
+    This command will transpile the code to JavaScript into a `dist` folder
+
+    then, for the execute the API using the transpiled `./dist/index.js` file.
+
+    ```
     npm run start
     ```
 
-    This command will transpile the code to JavaScript into a `dist` folder and then execute the API using the transpiled `./dist/index.js` file.
+    this process and command usage should be used for production deployment
 
 2. Start with hot reload (for development):
 
