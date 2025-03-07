@@ -7,7 +7,7 @@ import { config } from './config/config-loader';
     try {
         await app.listen(config.PORT, () => {
             console.log(`API listening on port: ${config.PORT}`)
-            console.log("**** Let's to play :) ****")
+            console.log("**** Let's play :) ****")
         })
     } catch (error) {
         console.log(error)
