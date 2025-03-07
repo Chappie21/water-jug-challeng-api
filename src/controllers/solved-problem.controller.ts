@@ -17,13 +17,15 @@ export const solvedProblemController = async (req:Request, res:Response) => {
         const solvedPivotX = createExplanationPivotX(bucketX, bucketY, goalZ);
         const solvedPivotY = createExplanationPivotY(bucketX, bucketY, goalZ);
 
-        // resolve problem!!!
+        // problem resolved!!!
         return res.status(200).json({
             message: 'resolved!!!',
             solution:  solvedPivotX.length <= solvedPivotY.length ? solvedPivotX : solvedPivotY
         })
     } catch (error:Error | any) {
-        console.log(error);
+        if (error.message === errors.problemSolver.P0004.errorCode) {
+            return res.status(400).json(errors.problemSolver.P0004);
+        }
 
         // return error
         return res.status(500).json({...errors.serverError.SE0001, error: error.message});

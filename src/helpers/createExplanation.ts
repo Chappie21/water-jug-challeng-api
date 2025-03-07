@@ -2,70 +2,95 @@ import { Bucket } from "../models";
 import { IExplanation } from "../interfaces";
 import { createExplanationMessage } from "./createExplanationMessage";
 import { actions } from "./actions";
+import { errors } from "./errors";
 
-
-
-const createExplanation = (capacityX:number, capacityY:number, goalZ:number, isInvert:boolean = false):IExplanation[] => {
-    // initializae Explanations list
-    let listExplanations:IExplanation[] = [];
-
-    // create buckets
+const createExplanation = (
+    capacityX: number,
+    capacityY: number,
+    goalZ: number,
+    isInvert: boolean = false
+): IExplanation[] => {
+    const listExplanations: IExplanation[] = [];
+    const visitedStates = new Set<string>();
     const bucketX = new Bucket(capacityX);
     const bucketY = new Bucket(capacityY);
 
-    // generate Explanations
-    while (bucketX.currentQuantity !== goalZ && bucketY.currentQuantity !== goalZ) {
-        
-        // if bucket X is empty and bucketY is not full, fill bucket x
+    while (
+        bucketX.currentQuantity !== goalZ &&
+        bucketY.currentQuantity !== goalZ
+    ) {
+        const stateKey = `${bucketX.currentQuantity},${bucketY.currentQuantity}`;
+        if (visitedStates.has(stateKey)) {
+            throw new Error(errors.problemSolver.P0004.errorCode);
+        }
+        visitedStates.add(stateKey);
+
         if (bucketX.isEmpty() && !bucketY.isFull()) {
-            // fill bucket X
             bucketX.fill();
-
-            // save explanation
-            listExplanations.push(createExplanationMessage(bucketX.currentQuantity, bucketY.currentQuantity, actions.fill, isInvert))
-        }
-
-        // if bucket X is Empty and bucket Y is Full, tranfer bucket Y to bucket X
-        if (bucketX.isEmpty() && bucketY.isFull()) {
-            // transfer bucket Y to bucket X
+            listExplanations.push(
+                createExplanationMessage(
+                    bucketX.currentQuantity,
+                    bucketY.currentQuantity,
+                    actions.fill,
+                    isInvert
+                )
+            );
+        } else if (bucketX.isEmpty() && bucketY.isFull()) {
             bucketY.transferToBucket(bucketX, bucketY.currentQuantity);
-
-            // save explanation
-            listExplanations.push(createExplanationMessage(bucketX.currentQuantity, bucketY.currentQuantity, actions.transfer, !isInvert))
-        }
-
-        // if bucket Y is full dump it
-        if (bucketY.isFull()) {
+            listExplanations.push(
+                createExplanationMessage(
+                    bucketX.currentQuantity,
+                    bucketY.currentQuantity,
+                    actions.transfer,
+                    isInvert
+                )
+            );
+        } else if (bucketY.isFull()) {
             bucketY.toEmpty();
-
-            // save explanation
-            listExplanations.push(createExplanationMessage(bucketX.currentQuantity, bucketY.currentQuantity, actions.dump, !isInvert))
+            listExplanations.push(
+                createExplanationMessage(
+                    bucketX.currentQuantity,
+                    bucketY.currentQuantity,
+                    actions.dump,
+                    isInvert
+                )
+            );
+        } else {
+            const transferAmount = Math.min(
+                bucketX.currentQuantity,
+                bucketY.remainingSpace()
+            );
+            bucketX.transferToBucket(bucketY, transferAmount);
+            listExplanations.push(
+                createExplanationMessage(
+                    bucketX.currentQuantity,
+                    bucketY.currentQuantity,
+                    actions.transfer,
+                    isInvert
+                )
+            );
         }
-
-        // if bucket X or Bucket Y is equal to goal z, break while cicle
-        if (bucketX.currentQuantity === goalZ || bucketY.currentQuantity === goalZ ) {
-            break;
-        }
-
-        // transfer bucket X to bucket Y
-        bucketX.transferToBucket(bucketY, bucketX.currentQuantity);
-
-        // save explanation
-        listExplanations.push(createExplanationMessage(bucketX.currentQuantity, bucketY.currentQuantity, actions.transfer, isInvert))
     }
 
-    // mark last explanation as solved
-    listExplanations[listExplanations.length - 1].explanation += ' solved';
-
+    if (listExplanations.length > 0) {
+        listExplanations[listExplanations.length - 1].explanation += " (solved)";
+    }
     return listExplanations;
-}
+};
 
-// create Explanation use Pivot bucket Y
-export const createExplanationPivotY = (capacityX:number, capacityY:number, goalZ:number):IExplanation[] => {
+// FIX: Lógica de inversión simplificada
+export const createExplanationPivotY = (
+    capacityX: number,
+    capacityY: number,
+    goalZ: number
+): IExplanation[] => {
     return createExplanation(capacityY, capacityX, goalZ, true);
-}
+};
 
-// create Explanation use Pivot bucket X
-export const createExplanationPivotX = (capacityX:number, capacityY:number, goalZ:number):IExplanation[] => {
-    return createExplanation(capacityX, capacityY, goalZ);
-}
+export const createExplanationPivotX = (
+    capacityX: number,
+    capacityY: number,
+    goalZ: number
+): IExplanation[] => {
+    return createExplanation(capacityX, capacityY, goalZ, false);
+};

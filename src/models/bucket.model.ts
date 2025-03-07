@@ -41,6 +41,10 @@ export class Bucket {
         return this.quantity === 0;
     }
 
+    public remainingSpace(): number {
+        return this.capacity - this.currentQuantity;
+    }
+
     // set new Quantity
     protected addQuantity (newQuantity:number):void {
         // verify quantity to add no exceeds the bucket's capacity

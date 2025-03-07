@@ -1,22 +1,39 @@
 import { IExplanation } from "../interfaces";
 import { actions } from "./actions";
 
-
-export const createExplanationMessage = (quantityX:number, quantityY:number, action: number, isInvert:boolean):IExplanation => {
-    const bucketXName:string = !isInvert ? 'X' : 'Y' ;
-    const bucketYName:string = !isInvert ? 'Y' : 'X' ;
+export const createExplanationMessage = (
+    quantityX: number,
+    quantityY: number,
+    action: number,
+    isInvert: boolean
+): IExplanation => {
+    const [displayX, displayY] = isInvert ? [quantityY, quantityX] : [quantityX, quantityY];
+    const [sourceBucket, targetBucket] = isInvert ? ["Y", "X"] : ["X", "Y"];
 
     switch (action) {
         case actions.fill:
-            return { quantityX, quantityY, explanation: `Fill bucket ${bucketXName}`}
-
+            return {
+                quantityX: displayX,
+                quantityY: displayY,
+                explanation: `Fill bucket ${sourceBucket}`,
+            };
         case actions.dump:
-            return { quantityX, quantityY, explanation: `Dump bucket ${bucketXName}`}
-
+            return {
+                quantityX: displayX,
+                quantityY: displayY,
+                explanation: `Empty bucket ${targetBucket}`,
+            };
         case actions.transfer:
-            return { quantityX, quantityY, explanation: `Transfer bucket ${bucketXName} to  bucket ${bucketYName}`}
-
+            return {
+                quantityX: displayX,
+                quantityY: displayY,
+                explanation: `Transfer from bucket ${sourceBucket} to ${targetBucket}`,
+            };
         default:
-            return { quantityX, quantityY, explanation: `Solved`}
+            return { 
+                quantityX: displayX, 
+                quantityY: displayY, 
+                explanation: "Solved" 
+            };
     }
-} 
+};
