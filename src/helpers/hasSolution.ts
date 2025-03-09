@@ -6,7 +6,7 @@ export const problemHasSolution = ({ bucketX, bucketY, goalZ }:IProblemBody):boo
     if (bucketX < goalZ && bucketY < goalZ) return false;
 
     // validate bucket X and Bucket Y is not equal
-    if (bucketX === bucketY) return false;
+    if (bucketX === bucketY && bucketX !== goalZ) return false;
 
     // problem have solution
     return true;
