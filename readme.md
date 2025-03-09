@@ -1,4 +1,5 @@
 # API Water Jug Challenge
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D22.13.0-brightgreen)](https://nodejs.org/)
 
 A RESTful API to solve the classic Water Jug Riddle using Node.js, Express, and TypeScript.
 
